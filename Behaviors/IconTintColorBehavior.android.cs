@@ -40,7 +40,7 @@ public partial class IconTintColorBehavior
 			case ImageView image:
 				SetImageViewTintColor(image, color);
 				break;
-			case MaterialButton button:
+			case MaterialButton button: // Added by me
 				SetMaterialButtonTintColor(button, color);
 				break;
 			case AButton button:
@@ -62,7 +62,7 @@ public partial class IconTintColorBehavior
 			image.SetColorFilter(new PorterDuffColorFilter(color.ToPlatform(), PorterDuff.Mode.SrcIn ?? throw new InvalidOperationException("PorterDuff.Mode.SrcIn should not be null at runtime.")));
 		}
 
-        static void SetMaterialButtonTintColor(MaterialButton button, Color? color)
+        static void SetMaterialButtonTintColor(MaterialButton button, Color? color) // Added by me
         {
             if (button.Icon is null)
             {
@@ -82,9 +82,10 @@ public partial class IconTintColorBehavior
 
         static void SetButtonTintColor(AButton button, Color? color)
 		{
-			var drawables = button.GetCompoundDrawables().Where(d => d is not null);
+            // button.GetCompoundDrawables() returns 4 items, but all are null, to drawables here will be empty
+            var drawables = button.GetCompoundDrawables().Where(d => d is not null);
 
-			if (color is null)
+            if (color is null)
 			{
 				foreach (var img in drawables)
 				{
