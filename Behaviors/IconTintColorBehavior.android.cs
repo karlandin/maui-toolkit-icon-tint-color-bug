@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Android.Graphics;
 using Android.Widget;
+using Google.Android.Material.Button;
 using Microsoft.Maui.Platform;
 using AButton = Android.Widget.Button;
 using AView = Android.Views.View;
@@ -39,6 +40,9 @@ public partial class IconTintColorBehavior
 			case ImageView image:
 				SetImageViewTintColor(image, color);
 				break;
+			case MaterialButton button:
+				SetMaterialButtonTintColor(button, color);
+				break;
 			case AButton button:
 				SetButtonTintColor(button, color);
 				break;
@@ -58,7 +62,25 @@ public partial class IconTintColorBehavior
 			image.SetColorFilter(new PorterDuffColorFilter(color.ToPlatform(), PorterDuff.Mode.SrcIn ?? throw new InvalidOperationException("PorterDuff.Mode.SrcIn should not be null at runtime.")));
 		}
 
-		static void SetButtonTintColor(AButton button, Color? color)
+        static void SetMaterialButtonTintColor(MaterialButton button, Color? color)
+        {
+            if (button.Icon is null)
+            {
+                return;
+            }
+
+            if (color is null)
+            {
+                button.Icon.ClearColorFilter();
+                color = Colors.Transparent;
+            }
+
+            button.Icon.SetColorFilter(new PorterDuffColorFilter(color.ToPlatform(),
+                PorterDuff.Mode.SrcIn ??
+                throw new InvalidOperationException("PorterDuff.Mode.SrcIn should not be null at runtime.")));
+        }
+
+        static void SetButtonTintColor(AButton button, Color? color)
 		{
 			var drawables = button.GetCompoundDrawables().Where(d => d is not null);
 
